@@ -79,19 +79,19 @@ public class JsonDownloadTask extends AsyncTask<String, Void, List<Category>> {
         return null;
     }
 
-    private List<Category> getCategories(JSONObject json) throws JSONException{
+    private List<Category> getCategories(JSONObject json) throws JSONException {
 
         List<Category> categories = new ArrayList<>();
         JSONArray categoryArray = json.getJSONArray("category");
 
-        for(int i = 0; i<categoryArray.length(); i++){
+        for (int i = 0; i < categoryArray.length(); i++) {
             JSONObject category = categoryArray.getJSONObject(i);
             String title = category.getString("title");
 
             List<Movie> movies = new ArrayList<>();
             JSONArray movieArray = category.getJSONArray("movie");
 
-            for(int j = 0; j<movieArray.length();j++){
+            for (int j = 0; j < movieArray.length(); j++) {
                 JSONObject movie = movieArray.getJSONObject(j);
                 String coverUrl = movie.getString("cover_url");
 
@@ -121,8 +121,7 @@ public class JsonDownloadTask extends AsyncTask<String, Void, List<Category>> {
         byte[] bytes = new byte[1024];
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         int lidos;
-        while ((lidos = is.read(bytes)) > 0) ;
-        {
+        while ((lidos = is.read(bytes)) > 0) {
             baos.write(bytes, 0, lidos);
         }
         return new String(baos.toByteArray());
