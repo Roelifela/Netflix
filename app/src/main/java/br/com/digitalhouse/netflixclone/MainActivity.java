@@ -16,9 +16,10 @@ import java.util.List;
 
 import br.com.digitalhouse.netflixclone.model.Category;
 import br.com.digitalhouse.netflixclone.model.Movie;
-import br.com.digitalhouse.netflixclone.util.JsonDownloadTask;
+import br.com.digitalhouse.netflixclone.util.CategoryTask;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity implements CategoryTask.CategoryLoader{
 
     private MainAdapter mainAdapter;
 
@@ -31,26 +32,22 @@ public class MainActivity extends AppCompatActivity {
 
 
         List<Category> categories = new ArrayList<>();
-        for (int j = 0; j < 10; j++) {
-            Category category = new Category();
-            category.setName("Categoria nome " + j);
 
-            List<Movie> movies = new ArrayList<>();
-            for (int i = 0; i < 30; i++) {
-
-                Movie movie = new Movie();
-//                movie.setCoverUrl(R.drawable.movie);
-                movies.add(movie);
-            }
-
-            category.setMovies(movies);
-            categories.add(category);
-        }
 
         mainAdapter = new MainAdapter(categories);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, recyclerView.VERTICAL, false));
         recyclerView.setAdapter(mainAdapter);
-        new JsonDownloadTask(this).execute("https://tiagoaguiar.co/api/netflix/home");
+
+        CategoryTask categoryTask = new CategoryTask(this);
+        categoryTask.setCategotyLoader(this);
+        categoryTask.execute("https://tiagoaguiar.co/api/netflix/home");
+
+    }
+
+    @Override
+    public void onResult(List<Category> categories) {
+        mainAdapter.setCategories(categories);
+        mainAdapter.notifyDataSetChanged();
 
     }
 
@@ -81,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
     private class MainAdapter extends RecyclerView.Adapter<CategoryHolder> {
 
-        private final List<Category> categories;
+        private List<Category> categories;
 
         public MainAdapter(List<Category> categories) {
             this.categories = categories;
@@ -109,6 +106,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public int getItemCount() {
             return categories.size();
+        }
+
+        void setCategories(List<Category> categories) {
+            this.categories.clear();
+            this.categories.addAll(categories);
+
         }
     }
 
