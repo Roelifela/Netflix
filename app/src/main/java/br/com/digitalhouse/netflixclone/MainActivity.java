@@ -17,6 +17,7 @@ import java.util.List;
 import br.com.digitalhouse.netflixclone.model.Category;
 import br.com.digitalhouse.netflixclone.model.Movie;
 import br.com.digitalhouse.netflixclone.util.CategoryTask;
+import br.com.digitalhouse.netflixclone.util.ImageDownloaderTask;
 
 
 public class MainActivity extends AppCompatActivity implements CategoryTask.CategoryLoader{
@@ -136,8 +137,7 @@ public class MainActivity extends AppCompatActivity implements CategoryTask.Cate
         public void onBindViewHolder(@NonNull MovieHolder holder, int position) {
 
             Movie movie = movies.get(position);
-//            holder.imageViewCover.setImageResource(movie.getCoverUrl());
-
+            new ImageDownloaderTask(holder.imageViewCover).execute(movie.getCoverUrl());
 
         }
 
