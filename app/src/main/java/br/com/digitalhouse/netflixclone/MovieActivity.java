@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -20,9 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.digitalhouse.netflixclone.model.Movie;
+import br.com.digitalhouse.netflixclone.model.MovieDetail;
+import br.com.digitalhouse.netflixclone.util.MovieDetailTask;
 
 
-public class MovieActivity extends AppCompatActivity {
+public class MovieActivity extends AppCompatActivity implements MovieDetailTask.MovieDetailLoader {
 
 
     private TextView txtTitle;
@@ -74,6 +77,19 @@ public class MovieActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            int id = extras.getInt("id");
+            MovieDetailTask movieDetailTask = new MovieDetailTask(this);
+            movieDetailTask.setMovieDetailLoader(this);
+            //movieDetailTask.execute("https://tiagoaguiar.co/api/netflix/" + id + ".json");
+            movieDetailTask.execute("https://tiagoaguiar.co/api/netflix/" + id);
+        }
+    }
+
+    @Override
+    public void onResult(MovieDetail movieDetail) {
+        Log.i("Teste", movieDetail.toString());
     }
 
     private static class MovieHolder extends RecyclerView.ViewHolder {
@@ -92,7 +108,6 @@ public class MovieActivity extends AppCompatActivity {
 
         public MovieAdapter(List<Movie> movies) {
             this.movies = movies;
-
         }
 
         @NonNull
@@ -117,6 +132,5 @@ public class MovieActivity extends AppCompatActivity {
             return movies.size();
         }
     }
-
 
 }

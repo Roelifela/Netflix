@@ -16,6 +16,7 @@
         tools:ignore="AllowBackup, GoogleAppIndexingWarning">
         <activity android:name=".MovieActivity">
 
+
         </activity>
         <activity android:name=".MainActivity">
 
